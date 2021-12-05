@@ -4,6 +4,12 @@ public class Book {
     private String title;
     private String author;
 
+    public Book(String title, String author, String description) {
+        this.title = title;
+        this.author = author;
+        this.description = description;
+    }
+
     public String getTitle() {
         return title;
     }

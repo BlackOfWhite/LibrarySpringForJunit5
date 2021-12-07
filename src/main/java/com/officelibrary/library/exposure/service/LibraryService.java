@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.officelibrary.library.exposure.model.Book;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.ApplicationScope;
 
-@Component
+@Service
 @ApplicationScope
 public class LibraryService {
 

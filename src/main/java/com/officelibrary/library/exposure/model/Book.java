@@ -1,5 +1,7 @@
 package com.officelibrary.library.exposure.model;
 
+import java.util.Objects;
+
 public class Book {
     private String title;
     private String author;
@@ -35,4 +37,18 @@ public class Book {
     }
 
     private String description;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (!(o instanceof Book)) { return false; }
+        Book book = (Book) o;
+        return Objects.equals(getTitle(), book.getTitle()) && Objects.equals(getAuthor(), book.getAuthor()) &&
+            Objects.equals(getDescription(), book.getDescription());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTitle(), getAuthor(), getDescription());
+    }
 }

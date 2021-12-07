@@ -31,6 +31,10 @@ public class LibraryService {
         return this.books.stream().filter(book -> book.getTitle().equals(title)).findAny();
     }
 
+    public Optional<Book> getBookById(int id) {
+        return this.books.stream().filter(book -> book.getUniqueID() == id).findAny();
+    }
+
     public List<Book> deleteBook(Book book) {
         this.books.remove(book);
         return this.books;

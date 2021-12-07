@@ -3,6 +3,7 @@ package com.officelibrary.library.exposure.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.officelibrary.library.exposure.model.Book;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,11 @@ public class LibraryService {
 
     public List<Book> deleteBook(Book book) {
         this.books.remove(book);
+        return this.books;
+    }
+
+    public List<Book> deleteBookById(int id) {
+        this.books.remove(getBookById(id).get());
         return this.books;
     }
 }

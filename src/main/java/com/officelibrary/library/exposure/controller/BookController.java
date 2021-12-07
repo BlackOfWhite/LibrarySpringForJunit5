@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+//@RestController
+@Controller
+@ResponseBody
 @RequestMapping("/library")
 public class BookController {
 
@@ -51,6 +54,11 @@ public class BookController {
     @DeleteMapping("/book")
     public void deleteBook(@RequestBody Book book) {
         libraryService.deleteBook(book);
+    }
+
+    @DeleteMapping("/book/{id}")
+    public void deleteBook(@PathVariable("id") int id) {
+        libraryService.deleteBookById(id);
     }
 
     @PostMapping("/add-book")

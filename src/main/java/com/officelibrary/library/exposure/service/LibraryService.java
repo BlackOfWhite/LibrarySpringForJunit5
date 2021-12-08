@@ -42,7 +42,7 @@ public class LibraryService {
     }
 
     public List<Book> deleteBookById(int id) {
-        this.books.remove(getBookById(id).get());
+        this.books.removeIf(book -> book.getUniqueID() == id);
         return this.books;
     }
 }

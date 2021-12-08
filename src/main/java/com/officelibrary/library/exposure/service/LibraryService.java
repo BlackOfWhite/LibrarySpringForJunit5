@@ -45,4 +45,8 @@ public class LibraryService {
         this.books.removeIf(book -> book.getUniqueID() == id);
         return this.books;
     }
+
+    public void updateBook(int id, Book newBook) {
+        this.books.set(books.indexOf(getBookById(id).orElseThrow()), newBook);
+    }
 }

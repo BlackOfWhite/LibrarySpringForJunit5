@@ -14,11 +14,12 @@ import com.officelibrary.library.exposure.service.LibraryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.SpringVersion;
 
 @SpringBootTest
 class LibraryServiceTest {
 
-    private static final List<Book> books = Arrays.asList(
+    private static final List<Book> library = Arrays.asList(
         new Book("Ulysses", "James Joyce", "Ulysses chronicles"),
         new Book("Don Quixote", "Miguel de Cervantes", "Retired country gentleman in his fifties"),
         new Book("One Hundred Years of Solitude", "Gabriel Garcia Marquez", "Widely beloved and acclaimed novel"),
@@ -33,8 +34,13 @@ class LibraryServiceTest {
     }
 
     @Test
+    void springVersionTest() {
+        assertEquals("5.3.13", SpringVersion.getVersion());
+    }
+
+    @Test
     void addAndGetASingleBookTest() {
-        libraryService.addBook(books.get(0));
+        libraryService.addBook(library.get(0));
 
         Optional<Book> bookOptional = libraryService.getBookByTitle("Ulysses");
         assertTrue(bookOptional.isPresent());
@@ -42,14 +48,14 @@ class LibraryServiceTest {
         assertAll(
             "Assert Ulysses is present",
             () -> assertEquals("Ulysses", book.getTitle()),
-            () -> assertEquals(books.get(0).getAuthor(), book.getAuthor()),
-            () -> assertEquals(books.get(0).getDescription(), book.getDescription(), "Descriptions must match")
+            () -> assertEquals(library.get(0).getAuthor(), book.getAuthor()),
+            () -> assertEquals(library.get(0).getDescription(), book.getDescription(), "Descriptions must match")
         );
     }
 
     @Test
     void retrieveAbsentBookTest() {
-        libraryService.addBook(books.get(0));
+        libraryService.addBook(library.get(0));
 
         Optional<Book> bookOptional = libraryService.getBookByTitle("Don Quixote");
         assertFalse(bookOptional.isPresent());
@@ -57,20 +63,31 @@ class LibraryServiceTest {
 
     @Test
     void addMultipleBooksTest() {
-        books.forEach(libraryService::addBook);
+        library.forEach(libraryService::addBook);
 
         assertEquals(4, libraryService.getBooks().size());
     }
 
     @Test
     void addBooksWithDuplicateTest() {
-        books.forEach(libraryService::addBook);
-        books.forEach(libraryService::addBook);
+        library.forEach(libraryService::addBook);
+        library.forEach(libraryService::addBook);
 // todo
         assertEquals(8, libraryService.getBooks().size());
         // should be 4??
     }
 
-    // todo delete
+    @Test
+    void deleteABookTest() {
+        library.forEach(libraryService::addBook);
 
+        Book bookToDelete = new Book("Don Quixote", "Miguel de Cervantes", "");
+        libraryService.deleteBook(bookToDelete);
+
+        List<Book> books = libraryService.getBooks();
+        assertEquals(3, books.size());
+        assertFalse(books.stream().anyMatch(b -> b.equals(bookToDelete)));
+        assertEquals(3, library.stream().filter(books::contains).count());
+    }
+// todo edit
 }

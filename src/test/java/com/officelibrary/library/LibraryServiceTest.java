@@ -72,16 +72,14 @@ class LibraryServiceTest {
     void addBooksWithDuplicateTest() {
         library.forEach(libraryService::addBook);
         library.forEach(libraryService::addBook);
-// todo
         assertEquals(8, libraryService.getBooks().size());
-        // should be 4??
     }
 
     @Test
     void deleteABookTest() {
         library.forEach(libraryService::addBook);
 
-        Book bookToDelete = new Book("Don Quixote", "Miguel de Cervantes", "");
+        Book bookToDelete = library.get(2);
         libraryService.deleteBook(bookToDelete);
 
         List<Book> books = libraryService.getBooks();
@@ -89,5 +87,4 @@ class LibraryServiceTest {
         assertFalse(books.stream().anyMatch(b -> b.equals(bookToDelete)));
         assertEquals(3, library.stream().filter(books::contains).count());
     }
-// todo edit
 }

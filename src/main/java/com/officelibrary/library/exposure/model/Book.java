@@ -9,6 +9,7 @@ public class Book {
     private int uniqueID;
     private String title;
     private String author;
+    private String description;
 
 
     public Book(String title, String author, String description) {
@@ -49,8 +50,6 @@ public class Book {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    private String description;
 
     @Override
     public boolean equals(Object o) {

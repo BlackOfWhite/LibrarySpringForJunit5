@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.officelibrary.library.exposure.model.Book;
 import com.officelibrary.library.exposure.service.LibraryService;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,8 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/libraryAPI")
 public class BookController {
 
-    private final LibraryService libraryService;
+    private LibraryService libraryService;
 
+    @Autowired
     public BookController(LibraryService libraryService) {
         this.libraryService = libraryService;
     }

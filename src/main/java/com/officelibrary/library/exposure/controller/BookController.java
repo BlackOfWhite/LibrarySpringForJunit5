@@ -1,6 +1,8 @@
 package com.officelibrary.library.exposure.controller;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.officelibrary.library.exposure.model.Book;
 import com.officelibrary.library.exposure.service.LibraryService;
@@ -17,12 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 //@RestController
 @Controller
 @ResponseBody
-@RequestMapping("/libraryAPI")
+@RequestMapping("/library")
 public class BookController {
 
     private LibraryService libraryService;
@@ -32,15 +33,26 @@ public class BookController {
         this.libraryService = libraryService;
     }
 
-    @GetMapping("/books")
-    public List<Book> book() {
+    @RequestMapping("/books")
+    public List<Book> listBooks() {
         return libraryService.getBooks();
     }
 
     @GetMapping("/booksWithParam")
-    public ResponseEntity<Book> getBook(@RequestParam(value = "title", defaultValue = "Clean Code") String title) {
-        return libraryService.getBookByTitle(title).isPresent() ?
-            new ResponseEntity<>(libraryService.getBookByTitle(title).get(), HttpStatus.OK) : new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> getBook(@RequestParam(value = "author") String author,
+                                     @RequestParam(value = "order", defaultValue = "ASC") String order) {
+        List<Book> books = libraryService.getBooksByAuthor(author);
+        if (books.isEmpty()) {
+            return new ResponseEntity<>("ERROR", HttpStatus.NOT_FOUND);
+        }
+        if ("ASC".equals(order)) {
+            return new ResponseEntity<>(books.stream().sorted(Comparator.comparing(Book::getTitle)).collect(Collectors.toList()),
+                HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(books.stream().sorted(Comparator.comparing(Book::getTitle).reversed()).collect(Collectors.toList()),
+                HttpStatus.OK);
+        }
+
     }
 
     @GetMapping("/booksNoCheck/{id}")
@@ -59,7 +71,6 @@ public class BookController {
         libraryService.deleteBook(book);
     }
 
-    @DeleteMapping("/books/{id}")
     public void deleteBook(@PathVariable("id") int id) {
         libraryService.deleteBookById(id);
     }
@@ -73,6 +84,7 @@ public class BookController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PutMapping("/books/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable("id") int id, @RequestBody Book book) {
         try {

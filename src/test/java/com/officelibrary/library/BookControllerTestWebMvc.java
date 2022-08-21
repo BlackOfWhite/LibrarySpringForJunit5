@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,13 +29,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BookController.class)
-class BookControllerTest {
+class BookControllerTestWebMvc {
+
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     // @Mock
     @MockBean
-    LibraryService libraryService;
+    private LibraryService libraryService;
 
     private static final List<Book> library = Arrays.asList(
         new Book("Ulysses", "James Joyce", "Ulysses chronicles"),
@@ -47,9 +47,12 @@ class BookControllerTest {
 
     @Test
     void getAllBooks() throws Exception {
+        // given
         Mockito.when(libraryService.getBooks()).thenReturn(library);
 
-        mockMvc.perform(MockMvcRequestBuilders
+        // when & then
+        mockMvc.perform(
+            MockMvcRequestBuilders
             .get("/library/books")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -60,27 +63,27 @@ class BookControllerTest {
     @Test
     void getBookByTitleParam() throws Exception {
         int bookId = 3;
-        String bookTitle = "The Great Gatsby";
-        Mockito.when(libraryService.getBookByTitle(bookTitle)).thenReturn(Optional.of(library.get(bookId)));
+        String bookAuthor = "F. Scott Fitzgerald";
+        Mockito.when(libraryService.getBooksByAuthor(bookAuthor)).thenReturn(Collections.singletonList(library.get(bookId)));
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get("/library/book")
-            .queryParam("title", bookTitle)
+            .get("/library/booksWithParam")
+            .queryParam("author", bookAuthor)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.title", is(bookTitle)))
+            .andExpect(jsonPath("$.title", is(bookAuthor)))
             .andExpect(jsonPath("$.author", is("F. Scott Fitzgerald")))
             .andExpect(jsonPath("$.description", is("An era that Fitzgerald himself dubbed the.")));
     }
 
     @Test
     void getBookByTitleNotFound() throws Exception {
-        String bookTitle = "The Great Gatsby";
-        Mockito.when(libraryService.getBookByTitle(bookTitle)).thenReturn(Optional.empty());
+        String bookAuthor = "The Great Gatsby";
+        Mockito.when(libraryService.getBooksByAuthor(bookAuthor)).thenReturn(Collections.emptyList());
 
         mockMvc.perform(MockMvcRequestBuilders
             .get("/library/book")
-            .queryParam("title", bookTitle)
+            .queryParam("author", bookAuthor)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -91,7 +94,7 @@ class BookControllerTest {
         Mockito.when(libraryService.addBook(bookToAdd)).thenReturn(Collections.singletonList(bookToAdd));
 
         mockMvc.perform(MockMvcRequestBuilders
-            .post("/library/add-book")
+            .post("/library/books")
             .content(mapToJson(bookToAdd))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().is2xxSuccessful());
@@ -103,7 +106,7 @@ class BookControllerTest {
         Mockito.when(libraryService.addBook(bookToAdd)).thenThrow(new RuntimeException());
 
         mockMvc.perform(MockMvcRequestBuilders
-            .post("/library/add-book")
+            .post("/library/books")
             .content(mapToJson(bookToAdd))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isInternalServerError());

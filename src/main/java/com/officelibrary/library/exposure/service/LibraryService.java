@@ -1,51 +1,60 @@
 package com.officelibrary.library.exposure.service;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import com.officelibrary.library.exposure.model.Book;
+import com.officelibrary.library.qualifer.FormatterService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.ApplicationScope;
 
 @Service
-@ApplicationScope
 public class LibraryService {
 
-    private List<Book> books;
+    private LibraryRepository libraryRepository;
 
-    public LibraryService() {
-        this.books = new ArrayList<>();
+    private FormatterService formatterService;
+
+    private LocalDate localDate;
+
+    public LibraryService(LibraryRepository libraryRepository, @Qualifier("xml") FormatterService formatterService) {
+        this.libraryRepository = libraryRepository;
+        this.formatterService = formatterService;
+        this.localDate = LocalDate.now();
     }
 
     public List<Book> addBook(Book book) {
-        this.books.add(book);
-        return this.books;
+        formatterService.format(book.getDescription());
+        return libraryRepository.addBook(book);
     }
 
     public List<Book> getBooks() {
-        return this.books;
+        return libraryRepository.getBooks();
     }
 
-    public Optional<Book> getBookByTitle(String title) {
-        return this.books.stream().filter(book -> book.getTitle().equals(title)).findAny();
+    public List<Book> getBooksByAuthor(String author) {
+        return libraryRepository.getBookByAuthor(author);
     }
 
     public Optional<Book> getBookById(int id) {
-        return this.books.stream().filter(book -> book.getUniqueID() == id).findAny();
+        return libraryRepository.getBookById(id);
     }
 
     public List<Book> deleteBook(Book book) {
-        this.books.remove(book);
-        return this.books;
+        return libraryRepository.deleteBook(book);
     }
 
     public List<Book> deleteBookById(int id) {
-        this.books.removeIf(book -> book.getUniqueID() == id);
-        return this.books;
+        return deleteBookById(id);
+    }
+
+
+    public void deleteAll() {
+        libraryRepository.deleteAll();
     }
 
     public void updateBook(int id, Book newBook) {
-        this.books.set(books.indexOf(getBookById(id).orElseThrow()), newBook);
+        libraryRepository.updateBook(id, newBook);
     }
 }

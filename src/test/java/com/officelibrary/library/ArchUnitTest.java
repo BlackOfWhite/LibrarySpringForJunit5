@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 class ArchUnitTest {
 
-    private static final String ROOT_PACKAGE = "com.officelibrary.library";
+    private static final String ROOT_PACKAGE = "com.officelibrary.library.exposure";
 
     private JavaClasses classes;
 

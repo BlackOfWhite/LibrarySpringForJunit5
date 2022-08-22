@@ -1,11 +1,11 @@
-package com.officelibrary.library.exposure.service;
+package com.officelibrary.library.repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.officelibrary.library.exposure.model.Book;
+import com.officelibrary.library.model.Book;
 import org.springframework.stereotype.Repository;
 
 @Repository

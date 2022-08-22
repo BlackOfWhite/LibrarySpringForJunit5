@@ -1,4 +1,4 @@
-package com.officelibrary.library.exposure.model;
+package com.officelibrary.library.model;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;

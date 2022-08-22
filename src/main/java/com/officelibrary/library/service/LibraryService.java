@@ -1,20 +1,30 @@
-package com.officelibrary.library.exposure.service;
+package com.officelibrary.library.service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import com.officelibrary.library.exposure.model.Book;
+import com.officelibrary.library.domain.AuthorDomain;
+import com.officelibrary.library.domain.BookDomain;
+import com.officelibrary.library.model.Book;
 import com.officelibrary.library.qualifer.FormatterService;
+import com.officelibrary.library.repository.LibraryRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
+//@Slf4j
 public class LibraryService {
+
+    private static final Logger logger = LogManager.getLogger(LibraryService.class);
 
     private LibraryRepository libraryRepository;
 
     private FormatterService formatterService;
+
+    private ValidationService validationService;
 
     private LocalDate localDate;
 
@@ -26,10 +36,12 @@ public class LibraryService {
 
     public List<Book> addBook(Book book) {
         formatterService.format(book.getDescription());
+        validationService.validateTitlePattern(new BookDomain(book.getTitle(), AuthorDomain.builder().name(book.getAuthor()).build()));
         return libraryRepository.addBook(book);
     }
 
     public List<Book> getBooks() {
+        logger.info("Getting list of all books");
         return libraryRepository.getBooks();
     }
 

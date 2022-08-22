@@ -1,11 +1,11 @@
-package com.officelibrary.library.exposure.controller;
+package com.officelibrary.library.controller;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.officelibrary.library.exposure.model.Book;
-import com.officelibrary.library.exposure.service.LibraryService;
+import com.officelibrary.library.model.Book;
+import com.officelibrary.library.service.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

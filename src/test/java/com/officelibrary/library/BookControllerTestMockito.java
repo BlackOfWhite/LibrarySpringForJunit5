@@ -12,16 +12,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.officelibrary.library.exposure.controller.BookController;
-import com.officelibrary.library.exposure.model.Book;
-import com.officelibrary.library.exposure.service.LibraryService;
-import org.junit.jupiter.api.Assertions;
+import com.officelibrary.library.controller.BookController;
+import com.officelibrary.library.model.Book;
+import com.officelibrary.library.service.LibraryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
